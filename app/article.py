@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 import time
 import json
-import re
 
 class Article:
     def scrap_articles() : 

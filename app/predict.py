@@ -1,48 +1,66 @@
-from app import app
-import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
-
+import pandas as pd
+from tensorflow.keras.models import load_model
+import joblib
+from datetime import timedelta
 class Predict : 
-    def predict_linear_reg(file_path, num_days):
-        """
-        Predict future selling prices using Linear Regression.
+    def predict_lstm(model_path, input_path, scaler_path, last_date_str, num_days):
+        # Load model and preprocessing files
+        # model = load_model(model_path)
+        model = load_model(model_path)
+        X_scaled = np.load(input_path)
+        scaler_y = joblib.load(scaler_path)
+        
+        # Create forecast
+        window_size = X_scaled.shape[0]  # assume already shaped (window_size, n_features)
+        forecast_input = X_scaled.copy()
+        forecast = []
 
-        Parameters:
-        file_path (str): Path to the dataset.
-        num_days (int): Number of days to predict.
+        for _ in range(num_days):
+            input_batch = forecast_input.reshape(1, window_size, -1)
+            pred_scaled = model.predict(input_batch, verbose=0)[0][0]
 
-        Returns:
-        dict: Predicted prices with future dates.
-        """
-        # Load dataset
-        df = pd.read_excel(file_path)
+            # Append next input
+            next_input = np.append(forecast_input[1:], [[*forecast_input[-1][:-1], pred_scaled]], axis=0)
+            forecast_input = next_input
+            forecast.append(pred_scaled)
 
-        # Convert Date column to numerical values
-        df['Date'] = pd.to_datetime(df['Date'])
-        df['Days'] = (df['Date'] - df['Date'].min()).dt.days
+        forecast_inverse = scaler_y.inverse_transform(np.array(forecast).reshape(-1, 1))
 
-        # Select features and target variables
-        X = df[['Days']]
-        y = df[['All Provinces', 'West Java', 'Jakarta']]
+        # Build date range from last known date
+        tanggal_awal = pd.to_datetime(last_date_str) + timedelta(days=1)
+        tanggal_prediksi = pd.date_range(start=tanggal_awal, periods=num_days)
 
-        # Train Linear Regression model
-        model = LinearRegression()
-        model.fit(X, y)
-
-        # Generate future dates
-        future_days = np.arange(df['Days'].max() + 1, df['Days'].max() + num_days + 1).reshape(-1, 1)
-        predictions = model.predict(future_days)
-
-        # Create predictions dictionary
-        future_dates = pd.to_datetime(df['Date'].max()) + pd.to_timedelta(np.arange(1, num_days + 1), unit='D')
-        predicted_prices = {
-            str(date.date()): {
-                "All Provinces": round(prices[0], 2),
-                "West Java": round(prices[1], 2),
-                "Jakarta": round(prices[2], 2)
-            }
-            for date, prices in zip(future_dates, predictions)
+        # Build result dict
+        predictions = {
+            str(tanggal.date()): float(harga)
+            for tanggal, harga in zip(tanggal_prediksi, forecast_inverse.flatten())
         }
 
-        return predicted_prices
+        return predictions
+    
+# MODEL_PATHS = {
+#     "cabai": "app/cr_model.keras"
+# }
+
+# SCALER_PATHS = {
+#     "cabai": "app/scaler_y_cabai.pkl"
+# }
+
+# INPUT_PATHS = {
+#     "cabai": "app/X_scaled_cabai.npy"
+# }
+
+# LAST_DATES = {
+#     "cabai": "2025-04-23"
+# }
+    
+# predictions = Predict.predict_lstm(
+#         MODEL_PATHS["cabai"],
+#         INPUT_PATHS["cabai"],
+#         SCALER_PATHS["cabai"],
+#         LAST_DATES["cabai"],
+#         14
+#     )
+
+# print(predictions)
