@@ -7,7 +7,7 @@ from app.article import Article
 from datetime import datetime, timedelta
 import pytz
 from pydantic import BaseModel
-from chatbot import main
+import chatbot
 from flask_cors import CORS
 CORS(app)
 
@@ -96,7 +96,7 @@ def chatbot():
             return jsonify({"error": "No message provided."}), 400
 
         # Preprocess and extract info
-        response = main.chatbot_run(user_message)
+        response = chatbot.chatbot_run(user_message)
 
         return jsonify({"response": response}), 200
 
