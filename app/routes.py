@@ -20,7 +20,7 @@ days_diff = (datetime.now().date() - start_date).days
 # Add days to start date
 new_date = start_date + timedelta(days=days_diff)
 
-print(f"Start date plus {days_diff} days is: {new_date}")
+# print(f"Start date plus {days_diff} days is: {new_date}")
 
 MODEL_PATHS = {
     "cabai": "models/cr_model.keras",
@@ -42,7 +42,7 @@ INPUT_PATHS = {
 
 LAST_DATES = start_date
 
-@app.route('/lstm/predict', methods=['GET'])
+@app.route('/vegenation/lstm/predict', methods=['GET'])
 def predict():
     comodity = request.args.get('comodity')
     num_days = days_diff + request.args.get('num_days', type=int)
@@ -86,7 +86,7 @@ def get_article():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/chatbot', methods=['POST'])
+@app.route('/vegenation/chatbot', methods=['POST'])
 def chatbot():
     try:
         data = request.get_json()
@@ -104,4 +104,4 @@ def chatbot():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
