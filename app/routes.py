@@ -98,7 +98,7 @@ def get_article():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/vegenation/chatbot', methods=['POST'])
-def chatbot():
+def chatbot_handler():
     try:
         data = request.get_json()
         user_message = data.get('message')
