@@ -42,6 +42,17 @@ INPUT_PATHS = {
 
 LAST_DATES = start_date
 
+@app.route('/vegenation', methods=['GET'])
+def index():
+    return jsonify({
+        "message": "Welcome to the LokaFresh-VegeNation API",
+        "endpoints": [
+            "/vegenation/lstm/predict?comodity=<>&num_days=<>",
+            "/vegenation/get_articles",
+            "/vegenation/chatbot"
+        ]
+    })
+
 @app.route('/vegenation/lstm/predict', methods=['GET'])
 def predict():
     comodity = request.args.get('comodity')
@@ -63,7 +74,7 @@ def predict():
 
     return jsonify({"comodity": comodity, "predictions": predictions})
 
-@app.route('/get_articles', methods=['GET'])
+@app.route('/vegenation/get_articles', methods=['GET'])
 def get_article():
     """
     JSON Response
