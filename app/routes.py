@@ -7,20 +7,10 @@ from app.article import Article
 from datetime import datetime, timedelta
 import pytz
 from pydantic import BaseModel
-import chatbot
+from app.chatbot import chatbot_run
 from flask_cors import CORS
 CORS(app)
 
-# Start date
-start_date = datetime.strptime("2025-03-31", "%Y-%m-%d").date()
-
-# Days difference
-days_diff = (datetime.now().date() - start_date).days
-
-# Add days to start date
-new_date = start_date + timedelta(days=days_diff)
-
-# print(f"Start date plus {days_diff} days is: {new_date}")
 
 MODEL_PATHS = {
     "cabai": "models/cr_model.keras",
@@ -40,8 +30,6 @@ INPUT_PATHS = {
     "bawang_putih": "models/X_scaled_bawang_putih.npy",
 }
 
-LAST_DATES = start_date
-
 @app.route('/vegenation', methods=['GET'])
 def index():
     return jsonify({
@@ -55,6 +43,19 @@ def index():
 
 @app.route('/vegenation/lstm/predict', methods=['GET'])
 def predict():
+    # Start date
+    start_date = datetime.strptime("2025-03-31", "%Y-%m-%d").date()
+
+    # Days difference
+    days_diff = (datetime.now().date() - start_date).days
+
+    # Add days to start date
+    new_date = start_date + timedelta(days=days_diff)
+
+    LAST_DATES = start_date
+
+    print(f"Start date plus {days_diff} days is: {new_date}")
+
     comodity = request.args.get('comodity')
     num_days = days_diff + request.args.get('num_days', type=int)
 
@@ -107,7 +108,7 @@ def chatbot_handler():
             return jsonify({"error": "No message provided."}), 400
 
         # Preprocess and extract info
-        response = chatbot.chatbot_run(user_message)
+        response = chatbot_run(user_message)
 
         return jsonify({"response": response}), 200
 

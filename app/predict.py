@@ -37,6 +37,8 @@ class Predict :
             for tanggal, harga in zip(tanggal_prediksi, forecast_inverse.flatten())
         }
 
+        print(num_days)
+
         return predictions
     
 # MODEL_PATHS = {
