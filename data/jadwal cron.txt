@@ -1,0 +1,14 @@
+# Cuaca harian - setiap hari jam 23:00
+0 23 * * * /usr/bin/python3 /path/to/CuacaHarian.py
+
+# Merge data - setiap hari jam 06:00
+0 6 * * * /usr/bin/python3 /path/to/MergeData.py
+
+# Inflasi bulanan - setiap tanggal 10 jam 10:00
+0 10 10 * * /usr/bin/python3 /path/to/Inflasi.py
+
+# Total Produksi tahunan - setiap 1 Juni jam 00:30
+30 0 1 6 * /usr/bin/python3 /path/to/TotalProduksi.py
+
+# Event tahunan - setiap 30 Desember jam 23:10
+10 23 30 12 * /usr/bin/python3 /path/to/Event.py

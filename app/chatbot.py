@@ -348,7 +348,6 @@ def ask_gemini(question, context, commodity):
         response = client.models.generate_content(
             model="gemini-2.0-flash",
             config=types.GenerateContentConfig(
-                max_output_tokens=500,
                 temperature=0.1
             ),
             contents=full_prompt
