@@ -1,9 +1,8 @@
 import re
-import requests
+import requests, json
 from datetime import datetime, timedelta
 import pandas as pd
 from fuzzywuzzy import process
-import re
 
 base_url = 'https://pblpnj.lokatani.id/vegenation'
 llm_base_url = 'http://localhost:11434' 
@@ -70,9 +69,6 @@ word_corrections = {
     "delapan": ["delapaan", "dellapan", "delappan"],
     "sembilan": ["sembillan", "semilan", "sembilann"],
     "sepuluh": ["sepuluuh", "sepulh", "sepulu"],
-    "artikel": ["aritkle", "aritkell", "artikl"],
-    "berita": ["berta", "beritaa", "berit"]
-
 }
 
 def normalize_text(text):
@@ -117,7 +113,6 @@ def correct_spelling(user_input):
         i += 1
     return " ".join(corrected_words)
 
-
 def extract_info(text: str) -> dict:
     result = {"PRD": None, "QTY": None, "days": None}
     text = text.lower()
@@ -158,7 +153,6 @@ def extract_info(text: str) -> dict:
         result["days"] = max_duration[1]
 
     return result
-
 
 def convert_to_days(duration: str) -> int | None:
     duration = duration.lower()
@@ -221,26 +215,10 @@ def chatbot_run(user_input):
 
     print(user_input)
     print("🟢 Jawaban untuk pertanyaan pengguna:")
-    # answer = ask_llama(user_input, context, extracted["PRD"])
     answer = ask_gemini(user_input, context, extracted["PRD"])
     print(answer)
 
-    # Validasi jawaban jika data tersedia
-    # if df is not None and not df.empty:
-    #     last_price = df["price"].iloc[-1]
-    #     price_as_int = int(round(last_price))
-    #     price_pattern = rf"Rp[\s]*{re.escape(format(price_as_int, ',')).replace(',', '[.,]')}"
-    #     if re.search(price_pattern, answer):
-    #         print("✅ Harga ditemukan dalam jawaban.")
-    #     elif "tidak tahu" in answer.lower():
-    #         print("⚠️ Jawaban tidak sesuai: chatbot tidak tahu padahal data tersedia.")
-    #     else:
-    #         print("❌ Harga tidak disebutkan dalam jawaban.")
-    #     print("-" * 60)
-
     return answer
-
-
 
 def filter_df_from_today(df):
     today = datetime.today().date()
@@ -262,11 +240,87 @@ def build_context(df, commodity):
         context += f"{date.strftime('%d %B %Y')}: Rp{int(row['price']):,}\n"
     return context
 
-
 def build_business_strategy_context(commodity):
-    context = f"Untuk pertanyaan mengenai strategi penjualan atau pembelian komoditas {commodity}"
+    """
+    Membangun konteks strategi bisnis berdasarkan komoditas yang diekstrak
+    menggunakan data dari file JSON knowledge_base_komoditas.json.
+    """
+    if knowledge_base_data is None:
+        load_knowledge_base()
+        if knowledge_base_data is None:
+             return f"Peringatan: Basis data pengetahuan tidak dapat dimuat. Informasi strategi untuk {commodity} mungkin terbatas."
 
-    return context
+    commodity_id_lookup = commodity.lower().replace(" ", "_")
+    if "cabai" in commodity_id_lookup:
+        commodity_id_lookup = "cabai"
+    elif "bawang_merah" in commodity_id_lookup or "bamer" in commodity_id_lookup :
+        commodity_id_lookup = "bawang_merah"
+    elif "bawang_putih" in commodity_id_lookup or "baput" in commodity_id_lookup:
+        commodity_id_lookup = "bawang_putih"
+    else: # Jika komoditas tidak dikenal setelah normalisasi dasar
+        return f"Konteks strategi untuk komoditas '{commodity}' tidak dapat dibangun secara spesifik karena tidak dikenali. Berikan saran umum jika memungkinkan."
+
+
+    context_parts = [
+        f"Anda adalah chatbot ahli strategi jual beli komoditas pertanian. Fokus pada komoditas: {commodity}.",
+        "Gunakan informasi detail dari basis pengetahuan berikut untuk menyusun strategi penjualan atau pembelian yang relevan dengan pertanyaan pengguna dan kondisi harga yang mungkin disebutkan:\n"
+    ]
+
+    # 1. Informasi Umum Komoditas Spesifik
+    commodity_info = next((item for item in knowledge_base_data.get("informasi_umum_komoditas", []) if item.get("id_komoditas") == commodity_id_lookup), None)
+
+    if commodity_info:
+        context_parts.append(f"\n--- Informasi Umum untuk {commodity_info.get('nama_komoditas', commodity)} ---")
+        if commodity_info.get('jenis_umum'):
+            context_parts.append(f"Jenis Umum: {', '.join(commodity_info.get('jenis_umum', []))}")
+        context_parts.append(f"Siklus Tanam & Panen: {commodity_info.get('siklus_tanam_panen', 'N/A')}")
+        context_parts.append(f"Karakteristik Utama: {commodity_info.get('karakteristik_utama', 'N/A')}")
+        context_parts.append(f"Faktor Umum Kenaikan Harga: {'; '.join(commodity_info.get('faktor_pemicu_kenaikan_harga', ['N/A']))}")
+        context_parts.append(f"Faktor Umum Penurunan Harga: {'; '.join(commodity_info.get('faktor_pemicu_penurunan_harga', ['N/A']))}")
+    else:
+        context_parts.append(f"\n[Peringatan: Informasi umum detail untuk komoditas '{commodity}' ({commodity_id_lookup}) tidak ditemukan dalam basis pengetahuan. Berikan jawaban strategi umum jika memungkinkan.]")
+
+    # 2. Analisis Kondisi Harga (Umum, sebagai dasar)
+    analisis_harga = knowledge_base_data.get("analisis_kondisi_harga", {})
+    if analisis_harga:
+        context_parts.append("\n--- Pemahaman Umum Analisis Kondisi Harga ---")
+        if analisis_harga.get("tren_harga"):
+            context_parts.append("Tren Harga Umum dan Indikasinya:")
+            for tren in analisis_harga.get("tren_harga", []):
+                context_parts.append(f"  - Jika kondisi harga '{tren.get('kondisi', 'N/A')}', indikasinya adalah '{tren.get('indikasi_umum', 'N/A')}'")
+        if analisis_harga.get("indikator_pasar_penting"):
+             context_parts.append(f"Indikator Pasar yang Perlu Diperhatikan: {'; '.join(analisis_harga.get('indikator_pasar_penting',[]))}")
+
+    # 3. Kerangka Strategi Penjualan (Umum - chatbot akan diminta menyesuaikan)
+    strategi_penjualan = knowledge_base_data.get("strategi_penjualan", {})
+    if strategi_penjualan and strategi_penjualan.get('deskripsi'):
+        context_parts.append("\n--- Kerangka Umum Strategi Penjualan ---")
+        context_parts.append(f"{strategi_penjualan.get('deskripsi')}")
+        for kondisi_key, detail_kondisi in strategi_penjualan.items():
+            if isinstance(detail_kondisi, dict) and 'nama_kondisi' in detail_kondisi and 'strategi' in detail_kondisi:
+                context_parts.append(f"Strategi saat {detail_kondisi.get('nama_kondisi')}:")
+                for strategi in detail_kondisi.get('strategi', []):
+                    context_parts.append(f"  - Opsi '{strategi.get('nama_strategi', 'N/A')}': {strategi.get('detail', 'N/A')}")
+
+    # 4. Kerangka Strategi Pembelian (Umum)
+    strategi_pembelian = knowledge_base_data.get("strategi_pembelian", {})
+    if strategi_pembelian and strategi_pembelian.get('deskripsi'):
+        context_parts.append("\n--- Kerangka Umum Strategi Pembelian ---")
+        context_parts.append(f"{strategi_pembelian.get('deskripsi')}")
+        for kondisi_key, detail_kondisi in strategi_pembelian.items():
+             if isinstance(detail_kondisi, dict) and 'nama_kondisi' in detail_kondisi and 'strategi' in detail_kondisi:
+                context_parts.append(f"Strategi saat {detail_kondisi.get('nama_kondisi')}:")
+                for strategi in detail_kondisi.get('strategi', []):
+                    context_parts.append(f"  - Opsi '{strategi.get('nama_strategi', 'N/A')}': {strategi.get('detail', 'N/A')}")
+
+    # 5. Faktor Tambahan yang Relevan
+    faktor_tambahan = knowledge_base_data.get("faktor_tambahan_pertimbangan", [])
+    if faktor_tambahan:
+        context_parts.append("\n--- Faktor Tambahan Penting untuk Dipertimbangkan dalam Menyusun Strategi ---")
+        context_parts.append("; ".join(faktor_tambahan))
+
+    context_parts.append(f"\nInstruksi untuk AI: Berdasarkan pertanyaan pengguna mengenai '{commodity}', gunakan semua informasi di atas untuk memberikan saran strategi (penjualan atau pembelian) yang paling relevan, spesifik, dan dapat dijalankan. Jika pengguna menyebutkan kondisi harga tertentu (misalnya 'harga sedang naik', 'harga turun'), kaitkan saran dengan kondisi tersebut menggunakan kerangka strategi yang ada.")
+    return "\n".join(context_parts)
 
 def build_articles_context(df):
     context = "Berikut adalah artikel-artikel terbaru terkait bahan pangan selama seminggu kebelakang dari detik.com, berikan kesimpulan:\n\n"
@@ -356,83 +410,102 @@ def ask_gemini(question, context, commodity):
     except Exception as e:
         return f"Error during Gemini API call: {e}"
 
-# MAIN
+KNOWLEDGE_BASE_FILE = 'data/strategi.json'
+knowledge_base_data = None
 
-# print("-----------------------------------------------")
+def load_knowledge_base(file_path=KNOWLEDGE_BASE_FILE):
+    """Memuat basis pengetahuan dari file JSON."""
+    global knowledge_base_data
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            knowledge_base_data = json.load(f)
+        print(f"Basis pengetahuan '{file_path}' berhasil dimuat.")
+    except FileNotFoundError:
+        print(f"KESALAHAN: File basis pengetahuan '{file_path}' tidak ditemukan.")
+        knowledge_base_data = None # Pastikan None jika gagal
+    except json.JSONDecodeError:
+        print(f"KESALAHAN: Gagal mendekode JSON dari file '{file_path}'. Pastikan format JSON valid.")
+        knowledge_base_data = None # Pastikan None jika gagal
+    except Exception as e:
+        print(f"KESALAHAN UMUM saat memuat basis pengetahuan: {e}")
+        knowledge_base_data = None
 
-# input = "bagaimana harga bawng putih untuk sebulan kedepan"
+def chatbot_run_gemini(user_input, debug=False):
+    corrected_input = correct_spelling(user_input)
+    explanation = f"📌 Pertanyaan Anda: {user_input}\n"
+    explanation += f"📝 Input setelah koreksi ejaan: {corrected_input}\n"
 
-# chatbot_run(input)
+    extracted = extract_info(corrected_input)
+    explanation += f"🔍 Informasi yang diekstrak: Komoditas: {extracted.get('PRD', 'tidak diketahui')}, Waktu: {extracted.get('QTY', 'tidak diketahui')}\n"
 
-# Contoh kalimat user yang typo + expected hasil setelah spelling correction
-batch_typo_tests = [
-    {"input": "harga cabeee 2 hari kedepan berapa", "expected_prd": "cabai", "expected_days": 2},
-    {"input": "Bagaimana harga cabe sebulan kedepan?", "expected_prd": "cabai", "expected_days": 30},
-    {"input": "bawng merahh brapa hrga nya seminggu kedepan", "expected_prd": "bawang_merah", "expected_days": 7},
-    {"input": "harga bawng putihh 3 bulan lagi", "expected_prd": "bawang_putih", "expected_days": 90},
-    {"input": "harga cabe rawitt utk 5 hari", "expected_prd": "cabai", "expected_days": 5},
-]
+    answer = ""
+    df = None
+    context = ""
 
-def test_batch_extraction():
-    print("🧪 Memulai batch test extract_info...")
-    success = 0
-    for idx, test_case in enumerate(batch_typo_tests):
-        corrected = correct_spelling(test_case["input"])
-        extracted = extract_info(corrected)
-        prd_match = extracted.get("PRD", "").lower() == test_case["expected_prd"].lower()
-        days_match = extracted.get("days", None) == test_case["expected_days"]
-        if prd_match and days_match:
-            print(f"✅ Test {idx+1}: PASS")
-            print(f"Input: {test_case['input']}")
-            print(f"corrected input: {corrected}")
-            print(f"Expected PRD: {test_case['expected_prd']}, Got: {extracted.get('PRD', '')}")
-            print(f"Expected Days: {test_case['expected_days']}, Got: {extracted.get('days', '')}")
-            success += 1
+    if "strategi" in corrected_input or "penjualan" in corrected_input or "pembelian" in corrected_input:
+        context = build_business_strategy_context(extracted["PRD"])
+        explanation += f"📈 Konteks strategi bisnis dibangun berdasarkan data performa produk {extracted['PRD']}.\n"
+    elif "berita" in corrected_input or "artikel" in corrected_input:
+        df = fetch_articles()
+        if df.empty:
+            explanation += "⚠️ Tidak ada artikel terbaru yang tersedia. Coba tanyakan komoditas lain atau periksa kembali nanti.\n"
+            return explanation if debug else "Mohon maaf saat ini kami belum memiliki artikel terbaru mengenai bahan pangan."
         else:
-            print(f"❌ Test {idx+1}: FAIL")
-            print(f"Input: {test_case['input']}")
-            print(f"corrected input: {corrected}")
-            print(f"Expected PRD: {test_case['expected_prd']}, Got: {extracted.get('PRD', '')}")
-            print(f"Expected Days: {test_case['expected_days']}, Got: {extracted.get('days', '')}")
-            print("---")
-    print(f"\n🎯 Hasil Akhir: {success}/{len(batch_typo_tests)} test lulus.")
+            context = build_articles_context(df)
+            explanation += f"📰 Mengambil {len(df)} artikel terbaru dari detik.com untuk konteks.\n"
+    else:
+        df = fetch_predictions_from_extracted_info(extracted)
+        if df.empty:
+            explanation += "⚠️  Data prediksi tidak tersedia. Komoditas yang didukung: Cabai, Bawang Merah, Bawang Putih.\n"
+            return explanation if debug else "Mohon maaf saat ini kami hanya bisa memberikan strategi dan prediksi harga. Komoditas yang kami cakup adalah Cabai, Bawang Merah, dan Bawang Putih."
+        else:
+            context = build_context(df, extracted["PRD"])
+            explanation += f"📈 Menggunakan data prediksi harga untuk {extracted['PRD']}.\n"
 
-# test_batch_extraction()
+    # Tambahkan cuplikan konteks dan ringkasan
+    explanation += f"\n📊 Cuplikan data:\n{context[:300]}{'...' if len(context) > 300 else ''}\n"
 
-test_questions = [
-    "Bagaimana harga cabai seminggu ke depan?",
-    "Bagaimana harga cabe sebulan kedepan?",
-    "Berapa harga cabai 5 hari ke depan?",
-    "Harga cabai sebulan kedepannya?",
-    "Prediksi harga cabe dalam 12 hari ke depan?",
-    "Bagaimana harga bawang merah seminggu ke depan?",
-    "Bagaimana harga bawng merah sebulan kedepan?",
-    "Berapa harga bawang putih 5 hari ke depan?",
-    "Harga bwang putih sebulan kedepannya?",
-]
+    # Panggil Gemini dengan indikator kepercayaan
+    answer = ask_gemini(user_input, context, extracted["PRD"]) 
 
-test_questions_wrong = [
-    "Bagaimana harga kol seminggu ke depan?",
-    "Bagaimana harga sayur kol sebulan kedepan?",
-    "Berapa harga bawang bombai 5 hari ke depan?",
-    "Harga timun kedepannya?",
-    "Prediksi harga tomat dalam 12 hari ke depan?",
-]
+    if debug:
+        return explanation + "\n📢 Jawaban akhir:\n" + answer
+    else:
+        return answer
 
+def chatbot_run_llama(user_input): 
+    corrected_input = correct_spelling(user_input)
+    print(f"Input setelah spelling correction: {corrected_input}")
 
-def batch_test_chatbot(questions):
-    for idx, question in enumerate(questions, 1):
-        print(f"\n🧪 Test #{idx}")
-        print("=" * 50)
-        try:
-            chatbot_run(question)
-        except Exception as e:
-            print(f"❌ Error saat menjalankan chatbot: {e}")
-        print("=" * 50)
+    extracted = extract_info(corrected_input)
+    print(f"Ekstraksi: {extracted}")
 
-# batch_test_chatbot(test_questions_wrong)
-# batch_test_chatbot(test_questions)
+    answer = ""
+    df = None
+    context = ""
 
-# test_batch_extraction()
+    if "strategi" in corrected_input or "penjualan" in corrected_input or "pembelian" in corrected_input:
+        context = build_business_strategy_context(extracted["PRD"])
+    elif "berita" in corrected_input or "artikel" in corrected_input:
+        df = fetch_articles()
+        if df.empty:
+            return "Mohon maaf saat ini kami belum memiliki artikel terbaru mengenai bahan pangan"
+        else:
+            context = build_articles_context(df)
+    else:
+        df = fetch_predictions_from_extracted_info(extracted)
+        print(df.tail())
 
-# build_articles_context(fetch_articles())
+        if df.empty:
+            print("✅ Test: PASS")
+            return "Mohon maaf saat ini kami hanya bisa memberikan strategi dan prediksi harga. Komoditas yang kami cakup adalah Cabai, Bawang Merah, dan Bawang Putih"
+        else:
+            context = build_context(df, extracted["PRD"])
+
+    print(user_input)
+    print("🟢 Jawaban untuk pertanyaan pengguna:")
+    # answer = ask_llama(user_input, context, extracted["PRD"])
+    answer = ask_gemini(user_input, context, extracted["PRD"])
+    print(answer)
+
+    return answer
