@@ -3,7 +3,6 @@ from flask import request, jsonify
 import pandas as pd
 import numpy as np
 from app.predict import Predict 
-from app.test_vew_predict import PredictNew
 from app.article import Article
 from datetime import datetime, timedelta
 import pytz
@@ -85,32 +84,6 @@ def predict():
     )
 
     return jsonify({"comodity": comodity, "predictions": predictions})
-
-# @app.route('/vegenation/predict', methods=['GET'])
-# def newpredict():
-#     run_merge_data()  # Jalankan update harian
-
-#     comodity = request.args.get('comodity')
-#     num_days = request.args.get('num_days', type=int)
-
-#     if comodity not in MODEL_PATHS:
-#         return jsonify({"error": "Invalid commodity. Choose from: cabai, bawang_merah, bawang_putih"}), 400
-
-#     if not num_days or num_days <= 0:
-#         return jsonify({"error": "Invalid number of days. Must be a positive integer."}), 400
-
-#     last_date_str = pd.read_csv("data/data_vegenation.csv")["Date"].iloc[-1]
-
-#     try:
-#         predictions = PredictNew.predict_lstm(
-#             MODEL_PATHS[comodity],
-#             last_date_str,
-#             num_days,
-#             comodity
-#         )
-#         return jsonify({"comodity": comodity, "predictions": predictions})
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
 
 @app.route('/vegenation/get_articles', methods=['GET'])
 def get_article():
