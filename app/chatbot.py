@@ -5,6 +5,7 @@ import pandas as pd
 from fuzzywuzzy import process
 
 base_url = 'https://pblpnj.lokatani.id/vegenation'
+# base_url = 'http://127.0.0.1:5000/vegenation'
 llm_base_url = 'http://localhost:11434' 
 
 def fetch_predictions_from_extracted_info(extracted: dict):
@@ -436,6 +437,7 @@ def chatbot_run_gemini(user_input, debug=False):
     explanation += f"📝 Input setelah koreksi ejaan: {corrected_input}\n"
 
     extracted = extract_info(corrected_input)
+    print(extracted)
     explanation += f"🔍 Informasi yang diekstrak: Komoditas: {extracted.get('PRD', 'tidak diketahui')}, Waktu: {extracted.get('QTY', 'tidak diketahui')}\n"
 
     answer = ""
@@ -455,6 +457,7 @@ def chatbot_run_gemini(user_input, debug=False):
             explanation += f"📰 Mengambil {len(df)} artikel terbaru dari detik.com untuk konteks.\n"
     else:
         df = fetch_predictions_from_extracted_info(extracted)
+        print(df.tail())
         if df.empty:
             explanation += "⚠️  Data prediksi tidak tersedia. Komoditas yang didukung: Cabai, Bawang Merah, Bawang Putih.\n"
             return explanation if debug else "Mohon maaf saat ini kami hanya bisa memberikan strategi dan prediksi harga. Komoditas yang kami cakup adalah Cabai, Bawang Merah, dan Bawang Putih."
