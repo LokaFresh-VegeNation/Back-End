@@ -1,0 +1,254 @@
+{
+  "nama_basis_pengetahuan": "Strategi Jual Beli Komoditas Hortikultura",
+  "versi": "1.0",
+  "deskripsi": "Basis pengetahuan untuk chatbot mengenai strategi penjualan dan pembelian komoditas cabai, bawang merah, dan bawang putih berdasarkan kondisi harga.",
+  "informasi_umum_komoditas": [
+    {
+      "id_komoditas": "cabai",
+      "nama_komoditas": "Cabai",
+      "jenis_umum": [
+        "Cabai Merah Keriting",
+        "Cabai Merah Besar",
+        "Cabai Rawit Merah",
+        "Cabai Rawit Hijau"
+      ],
+      "siklus_tanam_panen": "Musiman, sangat dipengaruhi cuaca (curah hujan, kemarau), rentan serangan hama dan penyakit.",
+      "karakteristik_utama": "Daya simpan relatif pendek, fluktuasi harga tinggi dan cepat.",
+      "faktor_pemicu_kenaikan_harga": [
+        "Gagal panen (cuaca ekstrem, hama/penyakit)",
+        "Permintaan tinggi (hari raya, acara khusus, industri makanan)",
+        "Gangguan rantai pasok dan distribusi (transportasi, logistik)",
+        "Kenaikan biaya input pertanian (pupuk, pestisida, tenaga kerja)",
+        "Berkurangnya luas tanam atau sentra produksi"
+      ],
+      "faktor_pemicu_penurunan_harga": [
+        "Panen raya serentak di berbagai daerah sentra",
+        "Pasokan melimpah dari daerah lain masuk ke pasar",
+        "Penurunan permintaan konsumen (misalnya setelah hari raya)",
+        "Kualitas produk kurang baik akibat cuaca atau penanganan pascapanen",
+        "Masuknya produk impor (jika ada)"
+      ]
+    },
+    {
+      "id_komoditas": "bawang_merah",
+      "nama_komoditas": "Bawang Merah",
+      "siklus_tanam_panen": "Memiliki musim tanam tertentu, beberapa daerah bisa menanam sepanjang tahun dengan irigasi yang baik. Panen dipengaruhi varietas dan kondisi agroklimat.",
+      "karakteristik_utama": "Daya simpan sedang (lebih baik dari cabai jika kering dan disimpan benar), harga fluktuatif namun cenderung lebih stabil dibanding cabai.",
+      "faktor_pemicu_kenaikan_harga": [
+        "Gagal panen atau penurunan produktivitas (cuaca, hama seperti ulat, penyakit seperti antraknosa)",
+        "Penurunan luas tanam nasional",
+        "Peningkatan permintaan untuk industri makanan atau ekspor",
+        "Gangguan distribusi atau penimbunan oleh spekulan",
+        "Kebijakan pemerintah terkait impor (jika produksi lokal kurang)"
+      ],
+      "faktor_pemicu_penurunan_harga": [
+        "Panen raya bersamaan di sentra-sentra produksi utama",
+        "Masuknya pasokan impor bawang merah (jika ada kebijakan impor)",
+        "Kualitas hasil panen melimpah dengan standar baik",
+        "Menurunnya permintaan pasar setelah periode puncak"
+      ]
+    },
+    {
+      "id_komoditas": "bawang_putih",
+      "nama_komoditas": "Bawang Putih",
+      "siklus_tanam_panen": "Produksi lokal di Indonesia masih terbatas dan sangat bergantung pada impor. Musim panen di negara produsen utama (seperti Tiongkok) mempengaruhi ketersediaan global.",
+      "karakteristik_utama": "Daya simpan paling lama di antara ketiganya jika disimpan dalam kondisi kering dan sejuk. Harga sangat dipengaruhi kebijakan impor dan harga di pasar global.",
+      "faktor_pemicu_kenaikan_harga": [
+        "Keterlambatan atau pembatasan pasokan impor dari negara produsen",
+        "Kenaikan harga di negara asal atau biaya pengiriman internasional",
+        "Kebijakan pemerintah terkait kuota atau tarif impor",
+        "Peningkatan permintaan global atau nasional",
+        "Isu geopolitik yang mempengaruhi negara pengekspor utama"
+      ],
+      "faktor_pemicu_penurunan_harga": [
+        "Masuknya pasokan impor dalam jumlah besar dan lancar",
+        "Stok nasional yang melimpah di gudang importir atau distributor",
+        "Penurunan harga di pasar internasional",
+        "Kebijakan pemerintah untuk stabilisasi harga melalui impor"
+      ]
+    }
+  ],
+  "analisis_kondisi_harga": {
+    "deskripsi": "Cara menganalisis dan memahami kondisi harga pasar.",
+    "tren_harga": [
+      {
+        "kondisi": "Harga Naik Tajam",
+        "indikasi_umum": "Kelangkaan pasokan signifikan atau lonjakan permintaan tiba-tiba."
+      },
+      {
+        "kondisi": "Harga Turun Drastis",
+        "indikasi_umum": "Pasokan pasar melimpah jauh melebihi permintaan atau penurunan permintaan yang signifikan."
+      },
+      {
+        "kondisi": "Harga Stabil Tinggi",
+        "indikasi_umum": "Pasokan cenderung sedikit namun stabil, atau permintaan konsisten tinggi."
+      },
+      {
+        "kondisi": "Harga Stabil Rendah",
+        "indikasi_umum": "Pasokan cukup stabil dan permintaan juga stabil pada tingkat normal atau rendah."
+      },
+      {
+        "kondisi": "Harga Fluktuatif",
+        "indikasi_umum": "Perubahan harga yang cepat dan sering, umum terjadi pada komoditas dengan daya simpan pendek dan sensitif terhadap banyak faktor."
+      }
+    ],
+    "indikator_pasar_penting": [
+      "Informasi dari petani/kelompok tani (luas tanam, perkiraan hasil panen, serangan hama/penyakit).",
+      "Data harga dan stok di pasar induk dan tingkat distributor.",
+      "Berita ekonomi dan pertanian terkait kebijakan pemerintah (impor/ekspor, operasi pasar).",
+      "Prakiraan cuaca jangka pendek dan panjang yang mempengaruhi produksi.",
+      "Kalender hari besar keagamaan dan nasional (HBKN) yang mempengaruhi pola permintaan.",
+      "Informasi harga dari aplikasi atau platform digital terpercaya."
+    ]
+  },
+  "strategi_penjualan": {
+    "deskripsi": "Strategi penjualan untuk petani, produsen, atau pedagang pengumpul berdasarkan kondisi harga.",
+    "saat_harga_naik_atau_tinggi": {
+      "nama_kondisi": "Harga Naik/Tinggi",
+      "strategi": [
+        {
+          "nama_strategi": "Jual Segera",
+          "detail": "Manfaatkan momentum harga tinggi untuk keuntungan maksimal, terutama untuk komoditas dengan daya simpan pendek seperti cabai. Minimalisir risiko penurunan harga mendadak."
+        },
+        {
+          "nama_strategi": "Jual Bertahap",
+          "detail": "Jika memiliki fasilitas penyimpanan yang memadai dan ada prediksi harga masih akan naik atau bertahan tinggi, jual sebagian untuk mengamankan keuntungan awal dan tahan sebagian kecil untuk spekulasi. Perhatikan biaya simpan dan risiko susut."
+        },
+        {
+          "nama_strategi": "Targetkan Pembeli Langsung",
+          "detail": "Cari pembeli langsung seperti restoran, hotel, industri makanan, atau konsumen akhir yang mungkin bersedia membayar harga premium untuk kualitas dan pasokan terjamin."
+        },
+        {
+          "nama_strategi": "Perkuat Kualitas dan Sortasi",
+          "detail": "Produk dengan kualitas super (ukuran seragam, segar, bebas hama/penyakit) akan lebih dicari dan dihargai tinggi saat pasokan terbatas."
+        }
+      ]
+    },
+    "saat_harga_turun_atau_rendah": {
+      "nama_kondisi": "Harga Turun/Rendah",
+      "strategi": [
+        {
+          "nama_strategi": "Tunda Penjualan (Hati-hati)",
+          "detail": "Jika memiliki fasilitas penyimpanan yang baik (khususnya untuk bawang merah/putih) dan ada prediksi harga akan membaik. Pertimbangkan biaya penyimpanan, risiko kerusakan, dan potensi kehilangan kesempatan jual."
+        },
+        {
+          "nama_strategi": "Olah Lebih Lanjut (Nilai Tambah)",
+          "detail": "Ubah produk mentah menjadi produk olahan untuk meningkatkan nilai jual dan daya simpan. Contoh: cabai menjadi cabai kering/bubuk/pasta/sambal; bawang merah menjadi bawang goreng/pasta; bawang putih menjadi bawang putih bubuk/minyak bawang."
+        },
+        {
+          "nama_strategi": "Cari Pasar Alternatif",
+          "detail": "Jelajahi pasar di daerah lain yang mungkin harganya masih lebih baik, atau manfaatkan platform penjualan online untuk menjangkau pasar yang lebih luas."
+        },
+        {
+          "nama_strategi": "Jual Cepat (Cut Loss)",
+          "detail": "Untuk komoditas yang cepat busuk seperti cabai, jika prediksi harga terus turun dan tidak ada opsi lain, jual segera untuk menghindari kerugian yang lebih besar meskipun harga rendah."
+        },
+        {
+          "nama_strategi": "Bangun Kemitraan Jangka Panjang",
+          "detail": "Jalin kerjasama dengan pembeli tetap (kontrak) untuk mendapatkan kepastian pasar dan harga yang mungkin lebih stabil, meskipun tidak selalu harga tertinggi."
+        }
+      ]
+    },
+    "saat_harga_stabil": {
+      "nama_kondisi": "Harga Stabil",
+      "strategi": [
+        {
+          "nama_strategi": "Jual Rutin dan Jaga Kualitas",
+          "detail": "Pertahankan pasokan ke pelanggan tetap dengan kualitas yang konsisten untuk membangun kepercayaan."
+        },
+        {
+          "nama_strategi": "Fokus pada Efisiensi Biaya",
+          "detail": "Optimalkan biaya produksi, pascapanen, dan distribusi untuk menjaga margin keuntungan yang baik."
+        },
+        {
+          "nama_strategi": "Diversifikasi Saluran Penjualan",
+          "detail": "Jangan bergantung pada satu pembeli atau satu jenis pasar saja untuk mengurangi risiko."
+        }
+      ]
+    }
+  },
+  "strategi_pembelian": {
+    "deskripsi": "Strategi pembelian untuk konsumen rumah tangga, restoran, industri makanan, atau pedagang pengecer berdasarkan kondisi harga.",
+    "saat_harga_naik_atau_tinggi": {
+      "nama_kondisi": "Harga Naik/Tinggi",
+      "strategi": [
+        {
+          "nama_strategi": "Beli Secukupnya Sesuai Kebutuhan",
+          "detail": "Hindari panic buying. Beli sesuai kebutuhan jangka pendek untuk menghindari pemborosan dan tekanan lebih lanjut pada harga."
+        },
+        {
+          "nama_strategi": "Cari Alternatif atau Substitusi",
+          "detail": "Jika memungkinkan, gunakan komoditas pengganti (misalnya, cabai kering untuk menggantikan cabai segar sebagian) atau kurangi penggunaan sementara."
+        },
+        {
+          "nama_strategi": "Beli Langsung dari Sumber (Jika Mungkin)",
+          "detail": "Coba beli langsung dari petani, kelompok tani, atau pasar grosir untuk memotong rantai pasok dan potensi mendapatkan harga lebih baik."
+        },
+        {
+          "nama_strategi": "Manfaatkan Program Pemerintah",
+          "detail": "Jika ada operasi pasar atau program penjualan murah dari pemerintah, manfaatkan kesempatan tersebut."
+        }
+      ]
+    },
+    "saat_harga_turun_atau_rendah": {
+      "nama_kondisi": "Harga Turun/Rendah",
+      "strategi": [
+        {
+          "nama_strategi": "Beli dalam Jumlah Lebih Banyak (Stok)",
+          "detail": "Manfaatkan harga murah untuk membuat stok, terutama untuk bawang merah dan bawang putih yang daya simpannya lebih lama. Sesuaikan dengan kapasitas penyimpanan dan kemampuan mengelola stok."
+        },
+        {
+          "nama_strategi": "Olah untuk Disimpan Jangka Panjang",
+          "detail": "Cabai bisa dibuat sambal, dibekukan utuh, atau dikeringkan. Bawang merah/putih bisa dikupas, diiris, lalu digoreng atau dibekukan."
+        },
+        {
+          "nama_strategi": "Bandingkan Harga dari Berbagai Sumber",
+          "detail": "Cek harga di beberapa pasar atau penjual sebelum memutuskan membeli dalam jumlah besar untuk mendapatkan harga terbaik."
+        }
+      ]
+    },
+    "saat_harga_stabil": {
+      "nama_kondisi": "Harga Stabil",
+      "strategi": [
+        {
+          "nama_strategi": "Beli Sesuai Kebutuhan Rutin",
+          "detail": "Lakukan pembelian secara teratur sesuai dengan pola konsumsi atau kebutuhan produksi."
+        },
+        {
+          "nama_strategi": "Cari Pemasok Tetap yang Terpercaya",
+          "detail": "Untuk mendapatkan kontinuitas pasokan, kualitas yang terjaga, dan mungkin harga yang lebih kompetitif melalui hubungan jangka panjang."
+        }
+      ]
+    }
+  },
+  "faktor_tambahan_pertimbangan": [
+    "Kualitas Produk (grade, kesegaran, ukuran, bebas penyakit/hama).",
+    "Biaya Penyimpanan (listrik, sewa gudang, risiko susut, kerusakan).",
+    "Biaya Transportasi dan Logistik Distribusi.",
+    "Akses dan Keakuratan Informasi Pasar Terkini.",
+    "Modal Kerja yang Tersedia (untuk menahan jual atau membeli stok).",
+    "Manajemen Risiko Usaha (fluktuasi harga, gagal panen, dll.).",
+    "Musim dan Iklim (pengaruh terhadap ketersediaan dan kualitas).",
+    "Perilaku Konsumen dan Tren Pasar."
+  ],
+  "contoh_interaksi_chatbot": [
+    {
+      "id_interaksi": "int001",
+      "tipe_pengguna": "Petani Cabai",
+      "pertanyaan_pengguna": "Harga cabai merah keriting sedang naik tajam nih, sudah Rp 70.000/kg. Baiknya saya jual semua sekarang atau masih bisa naik lagi ya?",
+      "contoh_jawaban_chatbot": "Harga cabai merah keriting yang sedang tinggi ini kemungkinan disebabkan oleh [sebutkan faktor dari 'faktor_pemicu_kenaikan_harga_cabai', misal: 'berkurangnya pasokan akibat cuaca buruk di beberapa sentra dan meningkatnya permintaan jelang akhir pekan']. Mengingat cabai merah keriting memiliki daya simpan yang pendek, menjual segera saat harga tinggi adalah strategi yang umumnya aman untuk memaksimalkan keuntungan dan menghindari risiko harga turun kembali. Namun, jika Anda memiliki informasi valid bahwa pasokan di pasar tujuan Anda masih akan sangat langka dalam 2-3 hari ke depan dan Anda bisa menjaga kualitas cabai, Anda bisa mempertimbangkan menjual sebagian besar sekarang dan menahan sebagian kecil. Selalu pantau informasi harga terkini ya."
+    },
+    {
+      "id_interaksi": "int002",
+      "tipe_pengguna": "Pengusaha Katering",
+      "pertanyaan_pengguna": "Saya butuh banyak bawang merah untuk produksi minggu depan. Sekarang harganya lagi agak turun. Sebaiknya saya beli sekarang atau tunggu turun lagi?",
+      "contoh_jawaban_chatbot": "Saat harga bawang merah sedang turun, ini bisa menjadi kesempatan baik untuk membeli stok kebutuhan produksi Anda. Bawang merah memiliki daya simpan yang cukup baik jika disimpan dengan benar (kering, sejuk, sirkulasi udara baik). Untuk memutuskan apakah akan membeli sekarang atau menunggu, coba pertimbangkan: 1. Seberapa signifikan penurunannya saat ini? 2. Apakah ada indikasi harga akan turun lebih lanjut (misalnya, informasi panen raya besar akan segera terjadi)? Jika penurunannya sudah cukup baik dan tidak ada kepastian akan turun lebih jauh, membeli sekarang bisa mengamankan biaya produksi Anda. Anda juga bisa mempertimbangkan membeli bertahap jika ragu."
+    },
+    {
+      "id_interaksi": "int003",
+      "tipe_pengguna": "Pedagang Bawang Putih",
+      "pertanyaan_pengguna": "Stok bawang putih impor banyak masuk, harga jadi agak goyang. Strategi jual saya gimana ya biar nggak rugi?",
+      "contoh_jawaban_chatbot": "Ketika pasokan bawang putih impor meningkat dan harga cenderung turun, persaingan memang lebih ketat. Beberapa strategi yang bisa Anda pertimbangkan: 1. Jika Anda memiliki bawang putih lokal, tekankan kualitas dan keunggulan lokalnya yang mungkin dicari konsumen tertentu. 2. Tawarkan harga yang kompetitif, mungkin dengan sedikit mengurangi margin untuk menjaga perputaran barang. 3. Jika memungkinkan, berikan layanan tambahan seperti pengiriman atau kemasan yang lebih menarik. 4. Jajaki penjualan ke pasar atau pelanggan yang mungkin belum terlalu jenuh dengan pasokan baru. 5. Jika harga terus menunjukkan tren menurun signifikan dan Anda khawatir stok lama, pertimbangkan untuk melakukan promosi atau diskon terbatas untuk mempercepat penjualan."
+    }
+  ]
+}
