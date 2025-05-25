@@ -17,7 +17,7 @@ def fetch_predictions_from_extracted_info(extracted: dict):
         return pd.DataFrame(columns=["date", "price"])
 
     try:
-        url = f"{base_url}/lstm/predict?comodity={commodity}&num_days={num_days}"
+        url = f"{base_url}/predict?comodity={commodity}&num_days={num_days}"
         res = requests.get(url)
         data = res.json()["predictions"]
         df = pd.DataFrame(list(data.items()), columns=["date", "price"])
