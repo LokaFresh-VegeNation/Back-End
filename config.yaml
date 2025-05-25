@@ -1,0 +1,28 @@
+data_paths:
+  cuaca: forecasting/data/raw/cuaca.csv
+  event: forecasting/data/raw/event.csv
+  inflasi: forecasting/data/raw/inflasi.csv
+  produksi: forecasting/data/raw/produksi.csv
+  harga: forecasting/data/raw/harga.csv
+  merged: forecasting/data/processed/data_vegenation.csv
+  re: forecasting/data/processed/data_vegenation1.csv
+
+preprocess_dir:
+  scaler: forecasting/data/processed/scaler/
+  sequence: forecasting/data/processed/sequence/
+
+model_paths:
+  bm: forecasting/models/bm_model.keras
+  bp: forecasting/models/bp_model.keras
+  cr: forecasting/models/cr_model.keras
+
+scaler_paths:
+  bm: forecasting/data/processed/scaler/scaler_y_bawang_merah.pkl
+  bp: forecasting/data/processed/scaler/scaler_y_bawang_putih.pkl
+  cr: forecasting/data/processed/scaler/scaler_y_cabai_rawit.pkl
+
+seq_paths:
+  bm: forecasting/data/processed/sequence/X_bawang_merah.npy
+  bp: forecasting/data/processed/sequence/X_bawang_putih.npy
+  cr: forecasting/data/processed/sequence/X_cabai_rawit.npy
+
