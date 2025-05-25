@@ -1,10 +1,11 @@
 import pandas as pd
 from datetime import datetime, timedelta
 from hijri_converter import convert
+import yaml
 
 def update_event(): 
     def load_config():
-        with open(os.path.join("config.yaml"), "r") as f:
+        with open("config.yaml", "r") as f:
             return yaml.safe_load(f)
     
     config = load_config()

@@ -3,7 +3,7 @@ import yaml, os
 from datetime import datetime, timedelta
 
 def load_config():
-    with open(os.path.join("config.yaml"), "r") as f:
+    with open("config.yaml", "r") as f:
         return yaml.safe_load(f)
 
 config = load_config()

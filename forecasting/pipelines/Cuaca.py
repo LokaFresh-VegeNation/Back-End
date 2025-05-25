@@ -1,13 +1,12 @@
 import requests
 import pandas as pd
-import os
 import yaml
 from datetime import datetime
 
 def update_cuaca(): 
     # Load path dari config.yaml
     def load_config():
-        with open(os.path.join("config.yaml"), "r") as f:
+        with open("config.yaml", "r") as f:
             return yaml.safe_load(f)
 
     API_KEY = '8b438d0e4a9e45c93570892b16363b49'

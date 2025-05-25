@@ -11,9 +11,8 @@ def load_config():
     with open("config.yaml", "r") as f:
         return yaml.safe_load(f)
 
-config = load_config()
-
 def predict_next_n_days(komoditas, n_days):
+    config = load_config()
     # Ambil path dari config
     model_path = config["model_paths"][komoditas]
     scaler_y_path = config["scaler_paths"][komoditas]
@@ -57,7 +56,12 @@ def predict_next_n_days(komoditas, n_days):
         f'prediksi_{komoditas}': forecast_inverse.flatten()
     })
 
-    print(hasil_df)
-    return hasil_df
+    predictions = {
+        str(tanggal.date()): float(harga)
+        for tanggal, harga in zip(tanggal_prediksi, forecast_inverse.flatten())
+    }
 
-predict_next_n_days("cr", 15)
+    print(predictions)
+    return predictions
+
+# predict_next_n_days("cr", 15)

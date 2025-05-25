@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  backend_app:
+    build: .
+    container_name: backend_prediksi_container
+    ports:
+      - "5000:5000"
+    volumes:
+      # Path di host (relatif terhadap docker-compose.yml) : Path absolut di dalam container
+      # Ini memastikan data yang diupdate oleh cron di host akan terlihat di dalam container.
+      - ./forecasting/data/processed:/forecasting/data/processed
+      - ./forecasting/data/raw:/forecasting/data/raw
+    environment:
+      # Contoh:
+      # - FLASK_APP=main.py
+      # - FLASK_RUN_HOST=0.0.0.0
+      # - FLASK_RUN_PORT=5000 # Port ini harus sesuai dengan yang diekspos Gunicorn di CMD Dockerfile
+      - TZ=Asia/Jakarta # Opsional: Mengatur timezone di dalam container jika relevan
+    restart: unless-stopped # Kebijakan restart: container akan otomatis restart kecuali jika dihentikan secara manual.

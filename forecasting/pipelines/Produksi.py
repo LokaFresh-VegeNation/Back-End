@@ -6,7 +6,7 @@ from datetime import datetime
 
 def update_produksi():
     def load_config():
-        with open(os.path.join("config.yaml"), "r") as f:
+        with open("config.yaml", "r") as f:
             return yaml.safe_load(f)
 
     API_ENDPOINTS = {

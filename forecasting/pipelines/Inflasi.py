@@ -1,11 +1,11 @@
 import pandas as pd
-import requests, os, yaml
+import requests, yaml
 from prophet import Prophet
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 def load_config():
-    with open(os.path.join("config.yaml"), "r") as f:
+    with open("config.yaml", "r") as f:
         return yaml.safe_load(f)
 
 API_KEY = "251f4ddc2af447c55b54a6d5ce564950"

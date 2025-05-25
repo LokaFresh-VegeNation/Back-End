@@ -11,13 +11,14 @@ from app.chatbot import chatbot_run_gemini
 from flask_cors import CORS
 import subprocess
 import sys
+import forecasting.coba_predict as predicting
 CORS(app)
 
 
 MODEL_PATHS = {
-    "cabai": "models/cr_model.keras",
-    "bawang_merah": "models/bm_model.keras",
-    "bawang_putih": "models/bp_model.keras",
+    "cabai": "cr",
+    "bawang_merah": "bm",
+    "bawang_putih": "bp",
 }
 
 SCALER_PATHS = {
@@ -80,6 +81,47 @@ def predict():
         INPUT_PATHS[comodity],
         SCALER_PATHS[comodity],
         LAST_DATES,
+        num_days
+    )
+
+    return jsonify({"comodity": comodity, "predictions": predictions})
+
+@app.route('/vegenation/predict', methods=['GET'])
+def test_predict():
+
+    # # Start date
+    # start_date = datetime.strptime("2025-03-31", "%Y-%m-%d").date()
+
+    # # Days difference
+    # days_diff = (datetime.now().date() - start_date).days
+
+    # # Add days to start date
+    # new_date = start_date + timedelta(days=days_diff)
+
+    # LAST_DATES = start_date
+
+    # print(f"Start date plus {days_diff} days is: {new_date}")
+
+    comodity = request.args.get('comodity')
+    num_days = request.args.get('num_days', type=int)
+
+    if comodity not in MODEL_PATHS:
+        return jsonify({"error": "Invalid commodity. Choose from: cabai, bawang_merah, bawang_putih"}), 400
+    
+    commodity_map = {
+    "cabai": "cr",
+    "bawang_putih": "bp",
+    "bawang_merah": "bm"
+    }
+
+    # Example usage
+    commodity = commodity_map.get(comodity)
+
+    if not num_days or num_days <= 0:
+        return jsonify({"error": "Invalid number of days. Must be a positive integer."}), 400
+
+    predictions = predicting.predict_next_n_days(
+        commodity,
         num_days
     )
 

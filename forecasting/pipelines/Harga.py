@@ -14,7 +14,7 @@ import time
 def scrape_harga():
     # Load path dari config.yaml
     def load_config():
-        with open(os.path.join("config.yaml"), "r") as f:
+        with open("config.yaml", "r") as f:
             return yaml.safe_load(f)
         
     # Setup headless mode
