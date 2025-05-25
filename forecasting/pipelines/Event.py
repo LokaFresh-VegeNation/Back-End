@@ -11,9 +11,9 @@ def update_event():
     config = load_config()
     FILE_PATH = config['data_paths']['event'] 
 
-    df = pd.read_csv(FILE_PATH, parse_dates=["date"])
+    df = pd.read_csv(FILE_PATH, parse_dates=["Date"])
 
-    last_year = df["date"].dt.year.max()
+    last_year = df["Date"].dt.year.max()
 
     next_year = last_year + 1
 
@@ -32,14 +32,14 @@ def update_event():
     eid_set = set([eid_date]) if eid_date else set()
 
     new_df = pd.DataFrame({
-        "date": new_dates.strftime("%Y-%m-%d")
+        "Date": new_dates.strftime("%Y-%m-%d")
     })
-    new_df["is_tahun_baru"] = new_df["date"].apply(lambda x: 1 if x.endswith("01-01") else 0)
-    new_df["is_natal"] = new_df["date"].apply(lambda x: 1 if x.endswith("12-25") else 0)
-    new_df["is_idul_fitri"] = new_df["date"].apply(lambda x: 1 if x in eid_set else 0)
+    new_df["is_tahun_baru"] = new_df["Date"].apply(lambda x: 1 if x.endswith("01-01") else 0)
+    new_df["is_natal"] = new_df["Date"].apply(lambda x: 1 if x.endswith("12-25") else 0)
+    new_df["is_idul_fitri"] = new_df["Date"].apply(lambda x: 1 if x in eid_set else 0)
 
     combined_df = pd.concat([df, new_df], ignore_index=True)
-    combined_df["Date"] = pd.to_datetime(combined_df["date"]).dt.strftime("%Y-%m-%d")
+    combined_df["Date"] = pd.to_datetime(combined_df["Date"]).dt.strftime("%Y-%m-%d")
 
 
     combined_df.to_csv(FILE_PATH, index=False)

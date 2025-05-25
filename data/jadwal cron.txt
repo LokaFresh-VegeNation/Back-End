@@ -1,14 +1,22 @@
+PROJECT_DIR="/srv/app/proyek_saya"
+PYTHON_VENV_EXEC="$PROJECT_DIR/virtualenv/bin/python3"
+
+# Pastikan direktori logs ada atau buat manual: mkdir -p $PROJECT_DIR/logs
+
 # Cuaca harian - setiap hari jam 23:00
-0 23 * * * /usr/bin/python3 /path/to/CuacaHarian.py
+0 23 * * * $PYTHON_VENV_EXEC $PROJECT_DIR/forecasting/pipelines/CuacaHarian.py >> $PROJECT_DIR/logs/cron_cuaca.log 2>&1
 
 # Merge data - setiap hari jam 06:00
-0 6 * * * /usr/bin/python3 /path/to/MergeData.py
+0 6 * * * $PYTHON_VENV_EXEC $PROJECT_DIR/forecasting/pipelines/MergeData.py >> $PROJECT_DIR/logs/cron_merge.log 2>&1
+
+# BARU: Preprocessing data - setiap hari jam 06:10 pagi
+10 6 * * * $PYTHON_VENV_EXEC $PROJECT_DIR/forecasting/models/preprocessing.py >> $PROJECT_DIR/logs/cron_preprocessing.log 2>&1
 
 # Inflasi bulanan - setiap tanggal 10 jam 10:00
-0 10 10 * * /usr/bin/python3 /path/to/Inflasi.py
+0 10 10 * * $PYTHON_VENV_EXEC $PROJECT_DIR/forecasting/pipelines/Inflasi.py >> $PROJECT_DIR/logs/cron_inflasi.log 2>&1
 
 # Total Produksi tahunan - setiap 1 Juni jam 00:30
-30 0 1 6 * /usr/bin/python3 /path/to/TotalProduksi.py
+30 0 1 6 * $PYTHON_VENV_EXEC $PROJECT_DIR/forecasting/pipelines/TotalProduksi.py >> $PROJECT_DIR/logs/cron_produksi.log 2>&1
 
 # Event tahunan - setiap 30 Desember jam 23:10
-10 23 30 12 * /usr/bin/python3 /path/to/Event.py
+10 23 30 12 * $PYTHON_VENV_EXEC $PROJECT_DIR/forecasting/pipelines/Event.py >> $PROJECT_DIR/logs/cron_event.log 2>&1
