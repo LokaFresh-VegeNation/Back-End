@@ -253,6 +253,7 @@ Lokafresh - Vegenation
 
 Project Link: [LokaFresh-Vegenation](https://github.com/LokaFresh-VegeNation)
 
+
 [contributors-shield]: https://img.shields.io/github/contributors/LokaFresh-VegeNation/Back-End.svg?style=for-the-badge
 [contributors-url]: https://github.com/LokaFresh-VegeNation/Back-End/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/LokaFresh-VegeNation/Back-End.svg?style=for-the-badge
@@ -261,5 +262,5 @@ Project Link: [LokaFresh-Vegenation](https://github.com/LokaFresh-VegeNation)
 [stars-url]: https://github.com/LokaFresh-VegeNation/Back-End/stargazers
 [issues-shield]: https://img.shields.io/github/issues/LokaFresh-VegeNation/Back-End.svg?style=for-the-badge
 [issues-url]: https://github.com/LokaFresh-VegeNation/Back-End/issues
-[license-shield]: https://img.shields.io/github/license/LokaFresh-VegeNation/Back-End.svg?style=for-the-badge
-[license-url]: https://github.com/LokaFresh-VegeNation/Back-End/blob/main/LICENSE
+[license-shield]: https://img.shields.io/github/license/LokaFresh-VegeNation/Machine-Learning.svg?style=for-the-badge
+[license-url]: https://github.com/LokaFresh-VegeNation/Back-End/main/blob/LICENSE
